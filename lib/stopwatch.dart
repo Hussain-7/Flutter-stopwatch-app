@@ -15,6 +15,7 @@ class StopWatchState extends State<StopWatch> {
   late Timer timer;
   final laps = <int>[];
   final itemHeight = 60.0;
+
   ScrollController _scrollController = ScrollController();
 
   void dispose() {
@@ -56,18 +57,42 @@ class StopWatchState extends State<StopWatch> {
       });
     }
 
-    void _stopTimer() {
+    Widget _buildRunCompleteSheet(BuildContext context) {
+      final totalRuntime =
+          laps.fold(milliseconds, (total, lap) => (total as int) + lap);
+      final textTheme = Theme.of(context).textTheme;
+      return SafeArea(
+          child: Container(
+        color: Theme.of(context).cardColor,
+        width: double.infinity,
+        child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 30.0),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text('Run Finished!', style: textTheme.headline6),
+              Text('Total Run Time is : ${_secondsText(totalRuntime)}.'),
+            ])),
+      ));
+    }
+
+    void _stopTimer(BuildContext context) {
       timer.cancel();
       setState(() {
         isTicking = false;
       });
-      final totalRuntime =
-          laps.fold(milliseconds, (total, lap) => (total as int) + (lap));
-      final alert = PlatformAlert(
-        title: 'Run Completed!',
-        message: 'Total Run Time is ${_secondsText(totalRuntime)}.',
-      );
-      alert.show(context);
+      // For showing alert dialog
+      // final totalRuntime =
+      //     laps.fold(milliseconds, (total, lap) => (total as int) + (lap));
+      // final alert = PlatformAlert(
+      //   title: 'Run Completed!',
+      //   message: 'Total Run Time is ${_secondsText(totalRuntime)}.',
+      // );
+      // alert.show(context);
+      showBottomSheet(context: context, builder: _buildRunCompleteSheet);
+      final controller =
+          showBottomSheet(context: context, builder: _buildRunCompleteSheet);
+      Future.delayed(Duration(seconds: 5)).then((_) {
+        controller.close();
+      });
     }
 
     Widget _buildCounter(BuildContext context) {
@@ -120,15 +145,17 @@ class StopWatchState extends State<StopWatch> {
                   onPressed: isTicking ? _lap : null,
                 ),
                 const SizedBox(width: 20),
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
+                Builder(
+                  builder: (context) => TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                    ),
+                    child: const Text('Stop'),
+                    onPressed: () => isTicking ? _stopTimer(context) : null,
                   ),
-                  child: const Text('Stop'),
-                  onPressed: isTicking ? _stopTimer : null,
                 ),
               ],
             )
