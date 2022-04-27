@@ -87,7 +87,9 @@ class StopWatchState extends State<StopWatch> {
       //   message: 'Total Run Time is ${_secondsText(totalRuntime)}.',
       // );
       // alert.show(context);
-      showBottomSheet(context: context, builder: _buildRunCompleteSheet);
+
+      // For showing snackbar bottom
+      // showBottomSheet(context: context, builder: _buildRunCompleteSheet);
       final controller =
           showBottomSheet(context: context, builder: _buildRunCompleteSheet);
       Future.delayed(Duration(seconds: 5)).then((_) {
