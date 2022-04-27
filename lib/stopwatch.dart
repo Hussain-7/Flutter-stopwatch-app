@@ -18,7 +18,6 @@ class StopWatchState extends State<StopWatch> {
   ScrollController _scrollController = ScrollController();
 
   void dispose() {
-    print('dispose');
     timer.cancel();
     super.dispose();
   }
@@ -50,7 +49,7 @@ class StopWatchState extends State<StopWatch> {
   Widget build(BuildContext context) {
     String name = ModalRoute.of(context)?.settings.arguments as String;
     void _startTimer() {
-      timer = Timer.periodic(Duration(milliseconds: 100), _onTick);
+      timer = Timer.periodic(const Duration(milliseconds: 100), _onTick);
       setState(() {
         laps.clear();
         isTicking = true;
@@ -91,7 +90,7 @@ class StopWatchState extends State<StopWatch> {
                   .headline5
                   ?.copyWith(color: Colors.white),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -102,25 +101,25 @@ class StopWatchState extends State<StopWatch> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                   ),
-                  child: Text('Start',
+                  child: const Text('Start',
                       style: TextStyle(
                         color: Colors.black,
                       )),
                   onPressed: isTicking ? null : _startTimer,
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.yellow),
                   ),
-                  child: Text('Lap',
+                  child: const Text('Lap',
                       style: TextStyle(
                         color: Colors.black,
                       )),
                   onPressed: isTicking ? _lap : null,
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 TextButton(
                   style: ButtonStyle(
                     backgroundColor:
@@ -128,7 +127,7 @@ class StopWatchState extends State<StopWatch> {
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
                   ),
-                  child: Text('Stop'),
+                  child: const Text('Stop'),
                   onPressed: isTicking ? _stopTimer : null,
                 ),
               ],
@@ -147,7 +146,7 @@ class StopWatchState extends State<StopWatch> {
           itemBuilder: (context, index) {
             final milliseconds = laps[index];
             return ListTile(
-              contentPadding: EdgeInsets.symmetric(horizontal: 50),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 50),
               title: Text('Lap ${index + 1}'),
               trailing: Text(_secondsText(milliseconds)),
             );
